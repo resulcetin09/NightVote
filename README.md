@@ -117,8 +117,8 @@ export circuit closeProposal(): Void {
 
 ### 1. Installation
 ```bash
-git clone https://github.com/YOUR_USERNAME/nightvote-midnight-dapp.git
-cd nightvote-midnight-dapp
+git clone https://github.com/resulcetin09/NightVote.git
+cd NightVote
 npm install
 ```
 

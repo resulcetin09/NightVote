@@ -39,7 +39,7 @@ export const Footer: React.FC = () => {
           <a href="https://risein.com" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-300 transition-colors">
             Rise In ↗
           </a>
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-300 transition-colors">
+          <a href="https://github.com/resulcetin09/NightVote" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-300 transition-colors">
             GitHub ↗
           </a>
         </div>
