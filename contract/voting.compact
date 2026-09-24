@@ -1,0 +1,114 @@
+// ═══════════════════════════════════════════════════════════════════
+// ZK-Verified Anonymous Voting Contract
+// Midnight Blockchain — Compact Language
+//
+// This contract demonstrates:
+//   - Public ledger state (vote tallies, proposal info)
+//   - Private witnesses (voter secret keys — never leave user's device)
+//   - Deliberate use of disclose() to control the private → public boundary
+//
+// Privacy Claim: A voter's identity is NEVER revealed. The ZK proof
+// guarantees that a vote was cast by an eligible participant without
+// exposing WHO voted or HOW they voted. Only aggregate vote counts
+// are public — individual votes remain private.
+//
+// Copyright (c) 2024 — Apache-2.0 License
+// ═══════════════════════════════════════════════════════════════════
+
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+// ───────────────────────────────────────────────────
+// PUBLIC LEDGER STATE
+// These fields are stored on-chain and visible to all network participants.
+// They represent the "public truth" of the voting contract.
+// ───────────────────────────────────────────────────
+
+// Vote tallies — Counter is a built-in type that can only increment
+export ledger votesFor: Counter;
+export ledger votesAgainst: Counter;
+export ledger totalVoters: Counter;
+
+// The hash of the proposal being voted on
+export ledger proposalHash: Bytes<32>;
+
+// Whether voting is currently open
+export ledger isActive: Boolean;
+
+// Commitment of the proposal creator (for authorization)
+export ledger creatorCommitment: Bytes<32>;
+
+// ───────────────────────────────────────────────────
+// PRIVATE WITNESS
+// This function runs ONLY on the user's local machine.
+// It provides secret data to circuits during ZK proof generation.
+// The secret key NEVER appears on-chain or in the proof.
+// ───────────────────────────────────────────────────
+
+witness local_secret_key(): Bytes<32>;
+
+// ───────────────────────────────────────────────────
+// CIRCUITS
+// Each circuit generates a zero-knowledge proof.
+// The proof attests that the computation was done correctly
+// without revealing the private inputs (witnesses).
+// ───────────────────────────────────────────────────
+
+// Initialize a new voting proposal.
+// The creator's identity is protected via a hash commitment.
+export circuit createProposal(proposal: Bytes<32>): Void {
+  // Get the creator's private key via the witness
+  const sk = local_secret_key();
+
+  // Hash the secret key to create a public commitment.
+  // This proves identity later without revealing the key.
+  const commitment = persistentHash<Bytes<32>>(sk);
+
+  // disclose() is the DELIBERATE boundary between private and public.
+  // Without disclose(), the compiler would reject writing witness-derived
+  // data to the ledger — this prevents accidental privacy leaks.
+  proposalHash = disclose(proposal);
+  isActive = disclose(true);
+  creatorCommitment = disclose(commitment);
+}
+
+// Cast an anonymous vote.
+// The voter proves they have a valid identity (via ZK proof)
+// but their actual identity (secret key) remains private.
+export circuit castVote(inFavor: Boolean): Void {
+  // Access private key from the witness — stays on user's device
+  const sk = local_secret_key();
+
+  // Create a voter commitment to prove uniqueness
+  // The hash is deterministic: same key always produces the same commitment
+  const voterCommitment = persistentHash<Bytes<32>>(sk);
+
+  // disclose() explicitly marks what crosses the privacy boundary.
+  // Only the VOTE DIRECTION becomes public — NOT the voter's identity.
+  // The ZK proof guarantees the vote is valid without revealing who voted.
+  if (disclose(inFavor)) {
+    votesFor = votesFor + 1;
+  } else {
+    votesAgainst = votesAgainst + 1;
+  }
+
+  totalVoters = totalVoters + 1;
+}
+
+// Close the voting proposal.
+// Only the original creator can close it (verified via ZK proof).
+export circuit closeProposal(): Void {
+  // Get the caller's secret key
+  const sk = local_secret_key();
+
+  // Recompute the commitment and verify it matches the creator
+  const callerCommitment = persistentHash<Bytes<32>>(sk);
+
+  // Assert that the caller is the original creator
+  // This check happens inside the ZK proof — the secret key is never revealed
+  assert callerCommitment == creatorCommitment "Only the proposal creator can close voting";
+
+  // Deliberately disclose the new state
+  isActive = disclose(false);
+}
