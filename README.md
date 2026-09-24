@@ -7,6 +7,15 @@ An enterprise-grade, privacy-preserving decentralized voting application built o
 
 ---
 
+## 🔗 Quick Links & Live Deliverables
+
+- 🚀 **Live Demo:** [https://nightvote.vercel.app](https://nightvote.vercel.app)
+- 🎥 **Demo Video:** [`demo/NightVote.mov`](./demo/NightVote.mov) (Wallet connect + circuit execution)
+- 🌐 **Deployed Contract (Preprod):** [`0x1ac7aade9e90f99fdeafea03ae520b9f71997004`](./deployment.json)
+- 📂 **GitHub Repository:** [https://github.com/resulcetin09/NightVote](https://github.com/resulcetin09/NightVote)
+
+---
+
 ## 🌟 Highlights & Features
 
 - 🔐 **Zero-Knowledge Privacy:** Individual voter identity and secret keys never leave the client machine.
@@ -26,9 +35,10 @@ An enterprise-grade, privacy-preserving decentralized voting application built o
 | **Circuit called successfully from frontend** | ✅ Fully Implemented | [`src/lib/midnight/circuit-caller.ts`](file:///Users/resulcetin/Desktop/risein/new-moon-stage2/src/lib/midnight/circuit-caller.ts), [`src/components/voting/ProposalCard.tsx`](file:///Users/resulcetin/Desktop/risein/new-moon-stage2/src/components/voting/ProposalCard.tsx) |
 | **Observable privacy behavior** | ✅ Documented & Visualized | [`src/components/privacy/ZKProofVisualizer.tsx`](file:///Users/resulcetin/Desktop/risein/new-moon-stage2/src/components/privacy/ZKProofVisualizer.tsx) |
 | **Contract deployed to Preprod** | ✅ Deployed with Address | [`deployment.json`](file:///Users/resulcetin/Desktop/risein/new-moon-stage2/deployment.json) (`0x1ac7aade9e90f99fdeafea03ae520b9f71997004`) |
-| **Minimum 8 meaningful commits** | ✅ 8+ Detailed Commits | Git History |
-| **Public GitHub Repository** | ✅ Ready for submission | Repository Root |
-| **Live Demo Ready** | ✅ Optimized for Vercel/Netlify | Next.js 14 App Router |
+| **Minimum 8 meaningful commits** | ✅ 10+ Detailed Commits | Git History |
+| **Public GitHub Repository** | ✅ Ready for submission | [github.com/resulcetin09/NightVote](https://github.com/resulcetin09/NightVote) |
+| **Live Demo Link** | ✅ Deployed on Vercel | [nightvote.vercel.app](https://nightvote.vercel.app) |
+| **Demo Video** | ✅ Included in Repository | [`demo/NightVote.mov`](./demo/NightVote.mov) |
 
 ---
 
