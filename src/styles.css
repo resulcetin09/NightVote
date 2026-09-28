@@ -1,0 +1,799 @@
+/* NightVote — a ballot paper, not a dashboard.
+   Cool grey paper, navy ink, ballpoint-blue marks. One family: Public Sans. */
+
+:root {
+  --paper: #e9edf1;
+  --sheet: #f6f8fa;
+  --ink: #0f1b2d;
+  --slate: #515e70;
+  --rule: #c4ccd6;
+  --pen: #2743c9;
+  --pen-soft: #dfe4fb;
+  --ok: #1f7a4d;
+  --ok-soft: #dcefe4;
+  --bad: #b3261e;
+  --bad-soft: #f8e1df;
+  --radius: 3px;
+  --measure: 46rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0d1522;
+    --sheet: #131e2f;
+    --ink: #e4e9f0;
+    --slate: #9aa6b6;
+    --rule: #2a3a52;
+    --pen: #8ea2ff;
+    --pen-soft: #1c2a55;
+    --ok: #6fd3a0;
+    --ok-soft: #12352a;
+    --bad: #ff9a90;
+    --bad-soft: #3d1a19;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Public Sans Variable", system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: var(--pen);
+  text-underline-offset: 0.18em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--pen);
+  outline-offset: 2px;
+}
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+}
+
+.skip:focus {
+  left: 16px;
+  top: 12px;
+  z-index: 10;
+  background: var(--sheet);
+  padding: 8px 12px;
+}
+
+/* Masthead */
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.mark {
+  width: 28px;
+  height: 28px;
+  fill: none;
+}
+
+.mark rect {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+.mark path {
+  stroke: var(--pen);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+nav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: var(--slate);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: var(--ink);
+}
+
+nav a[aria-current="page"] {
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--pen);
+}
+
+.wallet {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.wallet-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--slate);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+}
+
+.wallet-error {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 16px 14px;
+  color: var(--bad);
+}
+
+/* Buttons and fields */
+
+.button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--sheet);
+}
+
+.button.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.button.primary:hover:not(:disabled) {
+  background: var(--pen);
+  border-color: var(--pen);
+}
+
+.button.quiet {
+  border-color: var(--rule);
+  font-weight: 550;
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.button.file {
+  position: relative;
+}
+
+.button.file input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.button.file:focus-within {
+  outline: 3px solid var(--pen);
+  outline-offset: 2px;
+}
+
+input[type="text"],
+input:not([type]) {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--sheet);
+  color: var(--ink);
+  font: inherit;
+}
+
+input:not([type]):focus-visible {
+  border-color: var(--pen);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--pen-soft);
+}
+
+label {
+  font-weight: 600;
+}
+
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+
+.open-form {
+  margin: 28px 0 12px;
+}
+
+.open-form label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* The sheet: one column, ballot width */
+
+main {
+  padding: 40px 16px 64px;
+}
+
+.sheet {
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+.lede {
+  font-size: 1.2rem;
+  color: var(--slate);
+  max-width: 38rem;
+}
+
+.meta {
+  color: var(--slate);
+  font-size: 0.95rem;
+}
+
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.sheet-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rehearse {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--rule);
+  color: var(--slate);
+}
+
+.steps {
+  padding-left: 1.3em;
+  color: var(--slate);
+}
+
+.steps li {
+  margin-bottom: 6px;
+}
+
+.notice {
+  padding: 12px 16px;
+  border-left: 3px solid var(--pen);
+  background: var(--pen-soft);
+  margin: 16px 0;
+}
+
+.notice.urgent {
+  border-left-color: var(--bad);
+  background: var(--bad-soft);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notice.urgent p {
+  margin: 0;
+}
+
+.empty {
+  margin: 32px 0;
+  padding: 28px;
+  border: 1.5px dashed var(--rule);
+  color: var(--slate);
+}
+
+/* Lifecycle: it is a real sequence, so it is numbered by position */
+
+.lifecycle {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 20px 0 28px;
+  counter-reset: step;
+  border-top: 1px solid var(--rule);
+}
+
+.lifecycle li {
+  flex: 1;
+  padding: 10px 8px 0 0;
+  font-size: 0.9rem;
+  color: var(--slate);
+  counter-increment: step;
+  border-top: 3px solid transparent;
+  margin-top: -2px;
+}
+
+.lifecycle li::before {
+  content: counter(step) ". ";
+}
+
+.lifecycle li.done {
+  border-top-color: var(--rule);
+}
+
+.lifecycle li.current {
+  border-top-color: var(--pen);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* The ballot */
+
+.ballot {
+  background: var(--sheet);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 28px 28px 24px;
+  margin: 8px 0 32px;
+}
+
+.proposal {
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.ballot fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.ballot legend {
+  color: var(--slate);
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.box:last-of-type {
+  border-bottom: 1px solid var(--rule);
+}
+
+.box input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.square {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: var(--paper);
+}
+
+.box input:focus-visible + .square {
+  outline: 3px solid var(--pen);
+  outline-offset: 3px;
+}
+
+.pen-cross {
+  width: 40px;
+  height: 40px;
+  fill: none;
+  stroke: var(--pen);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+
+.pen-cross path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.pen-cross.drawn path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 180ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.pen-cross.drawn path + path {
+  transition-delay: 150ms;
+}
+
+.cast {
+  min-width: 180px;
+}
+
+/* Status and receipts */
+
+.status {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 16px 0 0;
+}
+
+.status.working {
+  color: var(--slate);
+}
+
+.status.error {
+  color: var(--bad);
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--rule);
+  border-top-color: var(--pen);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+  flex: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.receipt {
+  margin-top: 20px;
+  padding: 16px 18px;
+  background: var(--ok-soft);
+  border-left: 3px solid var(--ok);
+}
+
+.receipt h3 {
+  color: var(--ok);
+}
+
+.receipt p:last-child {
+  margin-bottom: 0;
+}
+
+.tx {
+  font-size: 0.9rem;
+  color: var(--slate);
+}
+
+/* Voter key and organizer tasks */
+
+.key-panel,
+.task,
+.share {
+  margin: 32px 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.key-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.handoff {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1.5px dashed var(--pen);
+}
+
+.commitment {
+  display: block;
+  padding: 10px 12px;
+  background: var(--paper);
+  margin-bottom: 10px;
+}
+
+.share label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.seal {
+  margin-top: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 500;
+}
+
+.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--pen);
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--slate);
+  margin-top: 6px;
+}
+
+.hint.over {
+  color: var(--bad);
+}
+
+/* Count */
+
+.results {
+  margin-top: 40px;
+}
+
+.results table,
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results th,
+.results td,
+.ledger th,
+.ledger td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px 12px 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.results thead th,
+.ledger thead th {
+  font-size: 0.9rem;
+  color: var(--slate);
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.results tbody th {
+  font-weight: 650;
+}
+
+.state {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--slate);
+}
+
+.count {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.tally {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.tally svg {
+  stroke: var(--pen);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.tally .strike {
+  stroke: var(--ink);
+}
+
+.tally-more {
+  font-size: 0.85rem;
+  color: var(--slate);
+}
+
+/* Privacy page */
+
+.prose h2 {
+  margin-top: 40px;
+}
+
+.prose ul {
+  padding-left: 1.2em;
+}
+
+.prose li {
+  margin-bottom: 10px;
+}
+
+.ledger {
+  margin: 24px 0;
+}
+
+.ledger td {
+  width: 50%;
+}
+
+/* Footer and fatal */
+
+.colophon {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  border-top: 1px solid var(--rule);
+  color: var(--slate);
+  font-size: 0.9rem;
+}
+
+.colophon p:last-child {
+  display: flex;
+  gap: 20px;
+}
+
+.fatal {
+  max-width: 32rem;
+  margin: 15vh auto;
+  padding: 0 16px;
+}
+
+@media (max-width: 640px) {
+  .field-row,
+  .notice.urgent,
+  .sheet-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .masthead-inner {
+    gap: 12px;
+  }
+
+  .wallet {
+    order: 2;
+  }
+
+  .wallet-id {
+    display: none;
+  }
+
+  nav a {
+    white-space: nowrap;
+  }
+
+  nav {
+    order: 3;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 -10px;
+  }
+
+  .ballot {
+    padding: 20px 16px;
+  }
+
+  .lifecycle li {
+    font-size: 0.8rem;
+  }
+
+  .results th,
+  .results td {
+    padding-right: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pen-cross.drawn path {
+    transition: none;
+  }
+
+  .spinner {
+    animation-duration: 2400ms;
+  }
+}
