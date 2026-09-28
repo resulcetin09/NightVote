@@ -1,0 +1,29 @@
+{
+  "schema": "nightvote-observed/v1",
+  "network": "preview",
+  "contractAddress": "f57ed2c48d73b5aff2036bd67fb8d826fe3b4447c8b0989a4f1c24003b7ff186",
+  "electionId": "07bcb9aa888dc1f2a48d86760bd02c030f46e83c86818925c0c155c2eb3b015e",
+  "organizerCommitment": "eb8e2bb76f22251d6199ba1eb11b625d2fb2542b7ac8231782bd9e0b05065ff5",
+  "observedAt": "2026-09-28T18:14:16.260Z",
+  "toolchain": {
+    "compactc": "0.31.1",
+    "compactRuntime": "0.16.0",
+    "ledger": "8.1.0",
+    "midnightJs": "4.1.1",
+    "proofServer": "midnightntwrk/proof-server:8.1.0"
+  },
+  "verifierKeySha256": {
+    "registerVoter": "b2eac3ecdc8c4fb244a32da9f1353e2b535601b51ff1a0f1fbe9e3e7bcc72da8",
+    "closeRegistration": "3c2eedf708d3a528e09cc5c40701631333bc9bfaf9bc7e927d9d0dcf3a54af48",
+    "openProposal": "ce6da72854e0a0a876dd689c6ea292e45fb38f3c5388bf98c833c8f7c3ecb2aa",
+    "closeProposal": "cff0b71321b58bce7351ebac79f8de200a1dd94cffd30ec9118d883e80042c0b",
+    "castVote": "32a9adc1a5ecdaef4f853ffdab42291afc85afadcca9e83092fb5305e718fc74"
+  },
+  "action": {
+    "kind": "ContractDeploy",
+    "txHash": "37b009caebe93a3e93d6242c47dda35efe109405eb9d1343acb0f124b8f1a831",
+    "blockHeight": 1066774,
+    "blockTime": "2026-09-28T18:11:36.001Z",
+    "status": "SUCCESS"
+  }
+}
