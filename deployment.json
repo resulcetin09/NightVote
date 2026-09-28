@@ -1,9 +1,0 @@
-{
-  "contractAddress": "0x1ac7aade9e90f99fdeafea03ae520b9f71997004",
-  "network": "preprod",
-  "deployedAt": "2026-09-23T23:36:23.468Z",
-  "transactionHash": "0x516dd69bc12d1550e712e16f78900edfb785dfd90e0fc67c5c39b362f3891c91",
-  "contractName": "ZK-Verified Anonymous Voting",
-  "compactVersion": "0.23",
-  "circuits": ["createProposal", "castVote", "closeProposal"]
-}
